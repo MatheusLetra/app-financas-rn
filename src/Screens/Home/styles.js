@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   item: {
+    flex: 1,
     width: '90%',
-    height: 200,
     marginTop: 20,
     alignSelf: 'center',
     borderRadius: 8,
@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'blue',
     borderRadius: 20,
-    alignSelf: 'flex-end'
+    alignSelf: 'flex-end',
+    marginHorizontal: 5
   },
   lista: {
     width: '100%',
@@ -70,6 +71,12 @@ const styles = StyleSheet.create({
   },
   infoRodape: {
     alignItems: 'center'
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginTop: 5
   }
 });
 

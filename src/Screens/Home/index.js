@@ -24,6 +24,7 @@ const Home = () => {
   const [totalDespesas, setTotalDespesas] = useState('0,00');
   const [totalReceitas, setTotalReceitas] = useState('0,00');
   const [totalDiferenca, setTotalDiferenca] = useState('0,00');
+  const [dataItem, setDataItem] = useState(null);
 
   const buscaValue = async () => {
     setValue(JSON.parse(await AsyncStorage.getItem('@app-financas-dados')));
@@ -62,21 +63,21 @@ const Home = () => {
           jsonValue = JSON.stringify([
             ...value,
             {
-              id: (value !== null && value.length > 0 ? value.length : 0)  + 1,
+              id: (value !== null && value.length > 0 ? value.length : 0) + 1,
               descricao,
               valor: formatNumber(valor),
               tipo: itemType,
-              data: DataAtual
+              data: dataItem === null ? DataAtual : dataItem
             },
           ]);
         } else {
           jsonValue = JSON.stringify([
             {
-              id: (value !== null && value.length > 0 ? value.length : 0)  + 1,
+              id: (value !== null && value.length > 0 ? value.length : 0) + 1,
               descricao,
               valor: formatNumber(valor),
               tipo: itemType,
-              data: DataAtual
+              data: dataItem === null ? DataAtual : dataItem
             },
           ]);
         }
@@ -85,6 +86,7 @@ const Home = () => {
         setDescricao('');
         setValor('');
         setItemType('D');
+        setDataItem(null)
       } catch (error) {
         console.log(error);
       }
@@ -93,7 +95,7 @@ const Home = () => {
       Alert.alert('Oops...', 'Preencha o valor e a descrição!', [
         {
           text: 'OK',
-          onPress: () => {},
+          onPress: () => { },
         },
         {
           text: 'Voltar a Lista',
@@ -132,9 +134,9 @@ const Home = () => {
         i.substr(j).replace(/(\d{3})(?=\d)/g, '$1' + thousands) +
         (decimalCount
           ? decimal +
-            Math.abs(amount - i)
-              .toFixed(decimalCount)
-              .slice(2)
+          Math.abs(amount - i)
+            .toFixed(decimalCount)
+            .slice(2)
           : '')
       );
     } catch (e) {
@@ -152,19 +154,36 @@ const Home = () => {
         <Text style={styles.texto}>Descrição: {item.descricao}</Text>
         <Text style={styles.texto}>Valor: {item.valor}</Text>
         <Text style={styles.texto}>Data: {item.data}</Text>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            deletarItem(item.id);
-          }}
-          style={styles.delete}>
-          <MaterialIcons name="delete" size={30} color="#FFF" />
-        </TouchableOpacity>
+        <View
+          style={styles.buttonContainer}
+        >
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              deletarItem(item.id)
+            }}
+            style={styles.delete}>
+            <MaterialIcons name="delete" size={30} color="#FFF" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => {
+              setDescricao(item.descricao)
+              setValor(item.valor.replace('.', '').replace(',', '.'))
+              setItemType(item.tipo)
+              setDataItem(item.data)
+              setAddForm(true)
+              deletarItem(item.id)
+            }}
+            style={styles.delete}>
+            <MaterialIcons name="edit" size={30} color="#FFF" />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   };
 
-  
+
   return (
     <>
       {!addForm && (
